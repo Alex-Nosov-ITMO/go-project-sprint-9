@@ -100,16 +100,10 @@ func main() {
 
 	// 5. Читаем числа из результирующего канала
 
-	var wg1 sync.WaitGroup
-	wg1.Add(1)
-	go func(ch <-chan int64) {
-		defer wg1.Done()
-		for v := range ch {
-			count.Add(1) // также используем потокобезопасные типы данных
-			sum.Add(v)
-		}
-	}(chOut)
-	wg1.Wait()
+	for v := range chOut {
+		count.Add(1) // также используем потокобезопасные типы данных
+		sum.Add(v)
+	}
 
 	fmt.Println("Количество чисел", inputCount.Load(), count.Load())
 	fmt.Println("Сумма чисел", inputSum.Load(), sum.Load())
